@@ -2,6 +2,7 @@ from telethon import TelegramClient
 import asyncio
 import os
 from dotenv import load_dotenv
+import pandas as pd
 
 load_dotenv()
 
@@ -10,15 +11,16 @@ api_hash = os.getenv("api_hash")
 phone_number = os.getenv("phone_number")
 target_bot = '@songdl_bot'
 
-# The list of songs you want to process
-song_list = [
-    'Vaadi pulla vaadi',  # Including your original one
-    'Vaarayo Vaarayo',
-    'Paththavaikkum',
-    'Kannadi Poove',
-    'Enadhuyire',
-    'Yaaro Manathile'
-]
+df=pd.read_csv('Liked_songs.csv')
+df=df.head(20)
+df['Track URI'] = df['Track URI'].str.replace(
+    'spotify:track:', 
+    'https://open.spotify.com/track/', 
+    regex=False
+)
+song_list = df.iloc[:, 0].tolist()
+print(song_list)
+
 # ---------------------
 
 async def interact_with_bot():
